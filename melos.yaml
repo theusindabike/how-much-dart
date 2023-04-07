@@ -1,0 +1,48 @@
+name: how-much-dart
+# repository: https://github.com/saileshbro/full_stack_todo_dart.git
+packages:
+  - backend
+  # - frontend
+  # - data_source
+  # - exceptions
+  # - models
+  # - repository
+  # - failures
+  # - typedefs
+
+sdkPath: .fvm/flutter_sdk
+ide:
+  intellij: false
+
+scripts:
+  backend:dev:
+    run: dart_frog dev
+    exec:
+      cuncurrency: 1
+      fail-fast: true
+    description: Starts the dev server for the backend
+    select-package:
+      scope: backend
+      flutter: false
+
+  generate:build:
+    run: melos run build_runner:build --no-select
+    description: Generate all files for all packages in this project.
+    exec:
+      concurrency: 5
+      fail-fast: true
+
+  build_runner:build:
+    run: dart pub run build_runner build --delete-conflicting-outputs
+    description: Build all generated files for Dart packages in this project.
+    exec:
+      concurrency: 1
+      fail-fast: true
+    select-package:
+      depends-on: build_runner
+
+  test:unit:
+    run: melos exec -c 1 --fail-fast -- "flutter test"
+    description: Run Unit tests for a specific package in this project.
+    select-package:
+      dir-exists: test
